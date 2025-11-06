@@ -1,9 +1,126 @@
 // Основной скрипт для PerioPlatforma
 document.addEventListener('DOMContentLoaded', function() {
-    // Управление модальным окном
+    // Инициализация системы
+    initializeSystem();
+    
+    // Управление навигацией
+    setupNavigation();
+    
+    // Управление модальными окнами
+    setupModals();
+    
+    // Инициализация демо-данных
+    initializeDemoData();
+});
+
+// Инициализация системы
+function initializeSystem() {
+    // Бургер-меню для мобильных устройств
+    const burgerMenu = document.getElementById('burgerMenu');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    if (burgerMenu && sidebar && sidebarOverlay) {
+        burgerMenu.addEventListener('click', function() {
+            this.classList.toggle('active');
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+            burgerMenu.classList.remove('active');
+            sidebar.classList.remove('active');
+            this.classList.remove('active');
+        });
+    }
+
+    // Обработка изменения размера окна
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            const burger = document.getElementById('burgerMenu');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (burger) burger.classList.remove('active');
+            if (sidebar) sidebar.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+        }
+    });
+}
+
+// Настройка навигации между страницами
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetPage = this.getAttribute('data-page');
+            
+            // Скрываем все страницы
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Показываем целевую страницу
+            const targetElement = document.getElementById(`${targetPage}-page`);
+            if (targetElement) {
+                targetElement.classList.add('active');
+            }
+            
+            // Обновляем активный пункт меню
+            navLinks.forEach(nav => nav.parentElement.classList.remove('active'));
+            this.parentElement.classList.add('active');
+            
+            // Закрываем мобильное меню
+            if (window.innerWidth <= 768) {
+                const burger = document.getElementById('burgerMenu');
+                const sidebar = document.querySelector('.sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                
+                if (burger) burger.classList.remove('active');
+                if (sidebar) sidebar.classList.remove('active');
+                if (overlay) overlay.classList.remove('active');
+            }
+            
+            // Загружаем данные для страницы
+            loadPageData(targetPage);
+        });
+    });
+}
+
+// Загрузка данных для конкретной страницы
+function loadPageData(page) {
+    switch(page) {
+        case 'patients':
+            loadAllPatients();
+            break;
+        case 'examinations':
+            loadAllExaminations();
+            break;
+        case 'reports':
+            loadReports();
+            break;
+        case 'settings':
+            loadSettings();
+            break;
+        default:
+            // Главная страница уже загружена
+            break;
+    }
+}
+
+// Настройка модальных окон
+function setupModals() {
+    setupPatientModal();
+    setupExamModal();
+    setupPatientCardModal();
+    setupSearch();
+}
+
+// Модальное окно добавления пациента
+function setupPatientModal() {
     const modal = document.getElementById('patientModal');
-    const openModalBtn = document.getElementById('addPatientBtn');
-    const quickAddPatient = document.getElementById('quickAddPatient');
+    const openModalBtns = document.querySelectorAll('#addPatientBtn, #addPatientBtn2, #quickAddPatient');
     const closeModalBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
     const patientForm = document.getElementById('patientForm');
@@ -22,13 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Обработчики событий для открытия модального окна
-    if (openModalBtn) {
-        openModalBtn.addEventListener('click', openModal);
-    }
-    
-    if (quickAddPatient) {
-        quickAddPatient.addEventListener('click', openModal);
-    }
+    openModalBtns.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', openModal);
+        }
+    });
 
     // Обработчики событий для закрытия модального окна
     if (closeModalBtn) {
@@ -94,8 +209,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function isValidPhone(phone) {
-        const phoneRegex = /^\d{10}$/;
-        return phoneRegex.test(phone);
+        // Простая валидация телефона - минимум 10 цифр
+        const phoneDigits = phone.replace(/\D/g, '');
+        return phoneDigits.length >= 10;
     }
 
     function showError(errorId, show) {
@@ -144,7 +260,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Поиск пациентов
+    // Маска для телефона
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Форматирование номера
+            if (value.length > 0) {
+                let formattedValue = value;
+                if (value.length > 3) {
+                    formattedValue = value.substring(0, 3) + ' ' + value.substring(3);
+                }
+                if (value.length > 6) {
+                    formattedValue = formattedValue.substring(0, 7) + '-' + formattedValue.substring(7);
+                }
+                if (value.length > 8) {
+                    formattedValue = formattedValue.substring(0, 10) + '-' + formattedValue.substring(10);
+                }
+                e.target.value = formattedValue;
+            }
+        });
+    }
+}
+
+// Модальное окно выбора пациента для осмотра
+function setupExamModal() {
+    const modal = document.getElementById('examModal');
+    const openModalBtn = document.getElementById('quickNewExam');
+    const closeModalBtn = document.getElementById('closeExamModal');
+    const searchInput = document.getElementById('examPatientSearch');
+
+    function openModal() {
+        loadPatientsForExam();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        if (searchInput) searchInput.value = '';
+    }
+
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', openModal);
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Поиск пациентов в модальном окне
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            filterPatientsInExamModal(query);
+        });
+    }
+}
+
+// Модальное окно карточки пациента
+function setupPatientCardModal() {
+    const modal = document.getElementById('patientCardModal');
+    const closeModalBtn = document.getElementById('closePatientCardModal');
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+}
+
+// Настройка поиска
+function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
 
@@ -167,10 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Инициализация демо-данных
-    initializeDemoData();
-});
+}
 
 // Функция для добавления пациента в систему
 function addPatientToSystem(patientData) {
@@ -190,15 +391,10 @@ function addPatientToSystem(patientData) {
 // Функция поиска пациентов
 function searchPatients(query) {
     // В реальной системе здесь был бы AJAX запрос к серверу
-    const allPatients = [
-        { id: 1, name: 'Иванов Петр Сергеевич', phone: '+79991234567', lastExam: '2023-12-15' },
-        { id: 2, name: 'Петрова Анна Константиновна', phone: '+79991234568', lastExam: '2023-12-14' },
-        { id: 3, name: 'Сидоров Михаил Владимирович', phone: '+79991234569', lastExam: '2023-12-13' },
-        { id: 4, name: 'Кузнецова Елена Дмитриевна', phone: '+79991234570', lastExam: '2023-12-12' }
-    ];
+    const allPatients = getDemoPatients();
     
     return allPatients.filter(patient => 
-        patient.name.toLowerCase().includes(query.toLowerCase()) ||
+        patient.fullName.toLowerCase().includes(query.toLowerCase()) ||
         patient.phone.includes(query)
     );
 }
@@ -212,7 +408,7 @@ function displaySearchResults(results) {
     } else {
         searchResults.innerHTML = results.map(patient => `
             <div class="search-result-item" data-patient-id="${patient.id}">
-                <div class="patient-name">${patient.name}</div>
+                <div class="patient-name">${patient.fullName}</div>
                 <div class="patient-phone">${patient.phone}</div>
                 <div class="patient-last-exam">Последний осмотр: ${formatDate(patient.lastExam)}</div>
             </div>
@@ -232,11 +428,116 @@ function displaySearchResults(results) {
     searchResults.style.display = 'block';
 }
 
-// Функция открытия карты пациента
+// Функция загрузки пациентов для осмотра
+function loadPatientsForExam() {
+    const patientsListModal = document.getElementById('patientsListModal');
+    const patients = getDemoPatients();
+    
+    patientsListModal.innerHTML = patients.map(patient => `
+        <div class="patient-exam-item" data-patient-id="${patient.id}">
+            <div class="patient-exam-info">
+                <h4>${patient.fullName}</h4>
+                <p>Возраст: ${patient.age} лет | Телефон: ${patient.phone}</p>
+                <p>Последний осмотр: ${formatDate(patient.lastExam)}</p>
+            </div>
+            <button class="btn btn-primary" onclick="startExamination(${patient.id})">Выбрать</button>
+        </div>
+    `).join('');
+}
+
+// Функция фильтрации пациентов в модальном окне осмотра
+function filterPatientsInExamModal(query) {
+    const patients = getDemoPatients();
+    const filteredPatients = patients.filter(patient => 
+        patient.fullName.toLowerCase().includes(query.toLowerCase()) ||
+        patient.phone.includes(query)
+    );
+    
+    const patientsListModal = document.getElementById('patientsListModal');
+    patientsListModal.innerHTML = filteredPatients.map(patient => `
+        <div class="patient-exam-item" data-patient-id="${patient.id}">
+            <div class="patient-exam-info">
+                <h4>${patient.fullName}</h4>
+                <p>Возраст: ${patient.age} лет | Телефон: ${patient.phone}</p>
+                <p>Последний осмотр: ${formatDate(patient.lastExam)}</p>
+            </div>
+            <button class="btn btn-primary" onclick="startExamination(${patient.id})">Выбрать</button>
+        </div>
+    `).join('');
+}
+
+// Функция открытия карточки пациента
 function openPatientCard(patientId) {
-    // В реальной системе здесь был бы переход на страницу пациента
-    console.log('Открытие карты пациента:', patientId);
-    showNotification(`Открыта карта пациента #${patientId}`, 'info');
+    const patient = getPatientById(patientId);
+    if (!patient) return;
+    
+    const patientCardContent = document.getElementById('patientCardContent');
+    const modal = document.getElementById('patientCardModal');
+    
+    patientCardContent.innerHTML = `
+        <div class="patient-details-section">
+            <h3>Личные данные</h3>
+            <div class="detail-row">
+                <span class="detail-label">ФИО:</span>
+                <span class="detail-value">${patient.fullName}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Дата рождения:</span>
+                <span class="detail-value">${formatDate(patient.birthDate)}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Возраст:</span>
+                <span class="detail-value">${patient.age} лет</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Телефон:</span>
+                <span class="detail-value">${patient.phone}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">${patient.email || 'Не указан'}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Пол:</span>
+                <span class="detail-value">${patient.gender === 'male' ? 'Мужской' : patient.gender === 'female' ? 'Женский' : 'Не указан'}</span>
+            </div>
+        </div>
+        
+        <div class="patient-details-section">
+            <h3>Последний осмотр</h3>
+            <div class="detail-row">
+                <span class="detail-label">Дата осмотра:</span>
+                <span class="detail-value">${formatDate(patient.lastExam)}</span>
+            </div>
+            <div class="examination-results">
+                <div class="exam-metric">
+                    <span class="metric-label">PPD средний:</span>
+                    <span class="metric-value ppd-${getPPDStatus(patient.ppd)}">${patient.ppd} мм</span>
+                </div>
+                <div class="exam-metric">
+                    <span class="metric-label">BOP:</span>
+                    <span class="metric-value bop-${getBOPStatus(patient.bop)}">${patient.bop}%</span>
+                </div>
+                <div class="exam-metric">
+                    <span class="metric-label">CAL средний:</span>
+                    <span class="metric-value">${patient.cal} мм</span>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Статус:</span>
+                <span class="detail-value">
+                    <span class="diagnosis-badge ${patient.status}">${getStatusText(patient.status)}</span>
+                </span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Примечания:</span>
+                <span class="detail-value">${patient.notes || 'Нет примечаний'}</span>
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
 // Функция показа уведомлений
@@ -283,7 +584,7 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Функция инициализации демо-данных
+// Инициализация демо-данных
 function initializeDemoData() {
     updateStatistics();
     updateActivePatients();
@@ -300,41 +601,12 @@ function updateStatistics() {
 // Функция обновления активных пациентов
 function updateActivePatients() {
     const activePatientsGrid = document.getElementById('activePatientsGrid');
+    const patients = getDemoPatients().filter(p => p.status !== 'success');
     
-    const activePatients = [
-        {
-            id: 1,
-            name: 'Иванов Петр Сергеевич',
-            age: 45,
-            lastExam: '2023-12-15',
-            ppd: 4.2,
-            bop: 45,
-            status: 'warning'
-        },
-        {
-            id: 2,
-            name: 'Петрова Анна Константиновна',
-            age: 52,
-            lastExam: '2023-12-14',
-            ppd: 3.8,
-            bop: 35,
-            status: 'success'
-        },
-        {
-            id: 3,
-            name: 'Сидоров Михаил Владимирович',
-            age: 38,
-            lastExam: '2023-12-13',
-            ppd: 5.1,
-            bop: 62,
-            status: 'danger'
-        }
-    ];
-    
-    activePatientsGrid.innerHTML = activePatients.map(patient => `
-        <div class="patient-card">
+    activePatientsGrid.innerHTML = patients.map(patient => `
+        <div class="patient-card" onclick="openPatientCard(${patient.id})">
             <div class="patient-header">
-                <h4>${patient.name}</h4>
+                <h4>${patient.fullName}</h4>
                 <span class="patient-age">${patient.age} лет</span>
             </div>
             <div class="patient-info">
@@ -355,10 +627,10 @@ function updateActivePatients() {
                 ${getStatusText(patient.status)}
             </div>
             <div class="patient-actions">
-                <button class="btn btn-primary btn-small" onclick="continueExamination(${patient.id})">
-                    Продолжить осмотр
+                <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); startExamination(${patient.id})">
+                    Начать осмотр
                 </button>
-                <button class="btn btn-secondary btn-small" onclick="openPatientHistory(${patient.id})">
+                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openPatientHistory(${patient.id})">
                     История
                 </button>
             </div>
@@ -369,51 +641,172 @@ function updateActivePatients() {
 // Функция обновления таблицы последних осмотров
 function updateRecentExaminations() {
     const examinationsTable = document.getElementById('examinationsTable');
+    const patients = getDemoPatients().slice(0, 5);
     
-    const recentExams = [
-        {
-            id: 1,
-            patientName: 'Иванов П.С.',
-            date: '2023-12-15',
-            ppd: 3.8,
-            bop: 35
-        },
-        {
-            id: 2,
-            patientName: 'Петрова А.К.',
-            date: '2023-12-14',
-            ppd: 4.2,
-            bop: 42
-        },
-        {
-            id: 3,
-            patientName: 'Сидоров М.В.',
-            date: '2023-12-13',
-            ppd: 5.1,
-            bop: 62
-        },
-        {
-            id: 4,
-            patientName: 'Кузнецова Е.Д.',
-            date: '2023-12-12',
-            ppd: 3.2,
-            bop: 28
-        }
-    ];
-    
-    examinationsTable.innerHTML = recentExams.map(exam => `
+    examinationsTable.innerHTML = patients.map(patient => `
         <tr>
-            <td>${exam.patientName}</td>
-            <td>${formatDate(exam.date)}</td>
-            <td class="ppd-${getPPDStatus(exam.ppd)}">${exam.ppd}mm</td>
-            <td class="bop-${getBOPStatus(exam.bop)}">${exam.bop}%</td>
+            <td>${patient.fullName}</td>
+            <td>${formatDate(patient.lastExam)}</td>
+            <td class="ppd-${getPPDStatus(patient.ppd)}">${patient.ppd}mm</td>
+            <td class="bop-${getBOPStatus(patient.bop)}">${patient.bop}%</td>
             <td>
-                <button class="btn btn-primary btn-small" onclick="openExamination(${exam.id})">
+                <button class="btn btn-primary btn-small" onclick="openPatientCard(${patient.id})">
                     Открыть
                 </button>
             </td>
         </tr>
     `).join('');
+}
+
+// Загрузка всех пациентов
+function loadAllPatients() {
+    const allPatientsList = document.getElementById('allPatientsList');
+    const patients = getDemoPatients();
+    
+    allPatientsList.innerHTML = patients.map(patient => `
+        <div class="patient-card" onclick="openPatientCard(${patient.id})">
+            <div class="patient-header">
+                <h4>${patient.fullName}</h4>
+                <span class="patient-age">${patient.age} лет</span>
+            </div>
+            <div class="patient-info">
+                <div class="info-row">
+                    <span>Телефон:</span>
+                    <span>${patient.phone}</span>
+                </div>
+                <div class="info-row">
+                    <span>Последний осмотр:</span>
+                    <span>${formatDate(patient.lastExam)}</span>
+                </div>
+                <div class="info-row">
+                    <span>PPD средний:</span>
+                    <span class="ppd-${getPPDStatus(patient.ppd)}">${patient.ppd}mm</span>
+                </div>
+            </div>
+            <div class="diagnosis-badge ${patient.status}">
+                ${getStatusText(patient.status)}
+            </div>
+            <div class="patient-actions">
+                <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); startExamination(${patient.id})">
+                    Осмотр
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); openPatientHistory(${patient.id})">
+                    История
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Загрузка всех осмотров
+function loadAllExaminations() {
+    const fullExaminationsTable = document.getElementById('fullExaminationsTable');
+    const patients = getDemoPatients();
+    
+    fullExaminationsTable.innerHTML = patients.map(patient => `
+        <tr>
+            <td>${patient.fullName}</td>
+            <td>${formatDate(patient.lastExam)}</td>
+            <td class="ppd-${getPPDStatus(patient.ppd)}">${patient.ppd}mm</td>
+            <td class="bop-${getBOPStatus(patient.bop)}">${patient.bop}%</td>
+            <td>
+                <span class="diagnosis-badge ${patient.status}">${getStatusText(patient.status)}</span>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-small" onclick="openPatientCard(${patient.id})">
+                    Карточка
+                </button>
+                <button class="btn btn-secondary btn-small" onclick="openExaminationDetails(${patient.id})">
+                    Детали
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Демо-данные
+function getDemoPatients() {
+    return [
+        {
+            id: 1,
+            fullName: 'Иванов Петр Сергеевич',
+            birthDate: '1978-05-15',
+            age: 45,
+            phone: '+7 (999) 123-45-67',
+            email: 'ivanov@example.com',
+            gender: 'male',
+            lastExam: '2023-12-15',
+            ppd: 4.2,
+            bop: 45,
+            cal: 3.8,
+            status: 'warning',
+            notes: 'Пациент требует наблюдения из-за повышенных показателей BOP'
+        },
+        {
+            id: 2,
+            fullName: 'Петрова Анна Константиновна',
+            birthDate: '1971-11-23',
+            age: 52,
+            phone: '+7 (999) 123-45-68',
+            email: 'petrova@example.com',
+            gender: 'female',
+            lastExam: '2023-12-14',
+            ppd: 3.8,
+            bop: 35,
+            cal: 3.2,
+            status: 'success',
+            notes: 'Состояние стабильное'
+        },
+        {
+            id: 3,
+            fullName: 'Сидоров Михаил Владимирович',
+            birthDate: '1985-08-30',
+            age: 38,
+            phone: '+7 (999) 123-45-69',
+            email: 'sidorov@example.com',
+            gender: 'male',
+            lastExam: '2023-12-13',
+            ppd: 5.1,
+            bop: 62,
+            cal: 4.5,
+            status: 'danger',
+            notes: 'Критическое состояние, требуется срочное лечение'
+        },
+        {
+            id: 4,
+            fullName: 'Кузнецова Елена Дмитриевна',
+            birthDate: '1990-03-12',
+            age: 33,
+            phone: '+7 (999) 123-45-70',
+            email: 'kuznetsova@example.com',
+            gender: 'female',
+            lastExam: '2023-12-12',
+            ppd: 3.2,
+            bop: 28,
+            cal: 2.9,
+            status: 'success',
+            notes: 'Профилактический осмотр'
+        },
+        {
+            id: 5,
+            fullName: 'Новиков Алексей Петрович',
+            birthDate: '1965-12-05',
+            age: 58,
+            phone: '+7 (999) 123-45-71',
+            email: 'novikov@example.com',
+            gender: 'male',
+            lastExam: '2023-12-10',
+            ppd: 4.8,
+            bop: 51,
+            cal: 4.1,
+            status: 'warning',
+            notes: 'Ухудшение показателей по сравнению с предыдущим осмотром'
+        }
+    ];
+}
+
+function getPatientById(id) {
+    return getDemoPatients().find(patient => patient.id == id);
 }
 
 // Вспомогательные функции
@@ -444,73 +837,41 @@ function getStatusText(status) {
 }
 
 // Глобальные функции для кнопок
-function continueExamination(patientId) {
-    showNotification(`Продолжение осмотра пациента #${patientId}`, 'info');
+function startExamination(patientId) {
+    const patient = getPatientById(patientId);
+    if (patient) {
+        showNotification(`Начало осмотра пациента: ${patient.fullName}`, 'success');
+        
+        // Закрываем модальное окно выбора пациента, если оно открыто
+        const examModal = document.getElementById('examModal');
+        if (examModal) {
+            examModal.classList.remove('active');
+        }
+        
+        // Здесь можно добавить переход на страницу осмотра
+        // window.location.href = `/examination.html?patientId=${patientId}`;
+    }
 }
 
 function openPatientHistory(patientId) {
-    showNotification(`Открытие истории пациента #${patientId}`, 'info');
+    const patient = getPatientById(patientId);
+    if (patient) {
+        showNotification(`Открытие истории пациента: ${patient.fullName}`, 'info');
+        // Здесь можно добавить переход на страницу истории
+    }
 }
 
-function openExamination(examId) {
-    showNotification(`Открытие осмотра #${examId}`, 'info');
+function openExaminationDetails(examId) {
+    showNotification(`Детали осмотра #${examId}`, 'info');
+    // Здесь можно добавить переход на страницу деталей осмотра
 }
 
-// Добавляем CSS анимации для уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .search-result-item {
-        padding: 12px 15px;
-        border-bottom: 1px solid var(--border);
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-    
-    .search-result-item:hover {
-        background: var(--background);
-    }
-    
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
-    
-    .patient-name {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 4px;
-    }
-    
-    .patient-phone {
-        color: var(--text-secondary);
-        font-size: 14px;
-        margin-bottom: 2px;
-    }
-    
-    .patient-last-exam {
-        color: var(--text-secondary);
-        font-size: 12px;
-    }
-`;
-document.head.appendChild(style);
+function loadReports() {
+    // Загрузка данных для страницы отчетов
+    showNotification('Загрузка отчетов...', 'info');
+}
+
+function loadSettings() {
+    // Загрузка данных для страницы настроек
+    showNotification('Загрузка настроек...', 'info');
+}
