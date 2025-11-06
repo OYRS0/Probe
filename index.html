@@ -127,12 +127,7 @@
                         <h1>Главная панель</h1>
                         <p>Добро пожаловать в PerioPlatforma</p>
                     </div>
-                    <div class="header-actions">
-                        <button class="btn btn-primary" id="addPatientBtn">
-                            <span>👤</span>
-                            Добавить пациента
-                        </button>
-                    </div>
+                    <!-- Убрана кнопка "Добавить пациента" с главной панели -->
                 </div>
 
                 <!-- Быстрый доступ -->
@@ -287,6 +282,27 @@
                         <input type="text" id="middleName" name="middleName">
                     </div>
 
+                    <!-- Добавлено поле медицинской страховки -->
+                    <div class="form-group required">
+                        <label for="insuranceNumber">№ медицинской страховки</label>
+                        <input type="text" id="insuranceNumber" name="insuranceNumber" required 
+                               placeholder="СМ-12345678">
+                        <div class="error-message" id="insuranceNumberError">Поле обязательно для заполнения</div>
+                    </div>
+
+                    <!-- Добавлено поле лечащего врача -->
+                    <div class="form-group required">
+                        <label for="attendingDoctor">Лечащий врач</label>
+                        <select id="attendingDoctor" name="attendingDoctor" required>
+                            <option value="">Выберите врача</option>
+                            <option value="Иванов А.В.">Иванов А.В.</option>
+                            <option value="Петрова С.И.">Петрова С.И.</option>
+                            <option value="Сидоров М.В.">Сидоров М.В.</option>
+                            <option value="Кузнецова Е.Д.">Кузнецова Е.Д.</option>
+                        </select>
+                        <div class="error-message" id="attendingDoctorError">Поле обязательно для заполнения</div>
+                    </div>
+
                     <div class="form-group required full-width">
                         <label for="phone">Телефон</label>
                         <div class="phone-input-group">
@@ -324,6 +340,29 @@
                                 <option value="male">Мужской</option>
                                 <option value="female">Женский</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- Добавлено поле адреса -->
+                    <div class="form-group">
+                        <label for="address">🏠 Адрес</label>
+                        <div class="address-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" id="city" name="city" placeholder="Город">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="street" name="street" placeholder="Улица">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" id="house" name="house" placeholder="Дом">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="apartment" name="apartment" placeholder="Квартира">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -382,6 +421,21 @@
         </div>
     </div>
 
+    <!-- Модальное окно карты обследования -->
+    <div class="modal-overlay" id="examinationModal">
+        <div class="modal extra-large-modal">
+            <div class="modal-header">
+                <h2>Карта обследования пациента</h2>
+                <button class="close-btn" id="closeExaminationModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="examination-content" id="examinationContent">
+                    <!-- Содержимое карты обследования -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
-</html>
+</html> 
