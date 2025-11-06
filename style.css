@@ -1121,4 +1121,332 @@ tr:hover {
         width: 95%;
         margin: 20px;
     }
+}/* ДОБАВЛЕННЫЕ СТИЛИ ДЛЯ НОВЫХ ФУНКЦИЙ */
+
+/* Стили для новых полей в форме */
+.address-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.address-fields .form-row {
+    gap: 15px;
+}
+
+/* Стили для модального окна обследования */
+.modal.extra-large-modal {
+    max-width: 1000px;
+}
+
+.examination-header {
+    background: var(--background);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+.examination-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.examination-section {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.examination-section h4 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--primary-blue);
+    padding-bottom: 8px;
+}
+
+/* Диагностические опции */
+.diagnosis-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.diagnosis-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--background);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.diagnosis-option:hover {
+    background: #e2e8f0;
+}
+
+.diagnosis-option input {
+    margin: 0;
+}
+
+/* Параметры обследования */
+.exam-params-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.param-group {
+    background: var(--background);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.param-group label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.param-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+/* Схема зубов */
+.teeth-schema {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.teeth-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.jaw {
+    display: flex;
+    gap: 4px;
+    padding: 15px;
+    background: var(--background);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.tooth {
+    width: 35px;
+    height: 50px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: white;
+    font-size: 0.7rem;
+    transition: all 0.3s ease;
+}
+
+.tooth-normal {
+    background: #D1FAE5;
+    border-color: #10B981;
+}
+
+.tooth-warning {
+    background: #FEF3C7;
+    border-color: #F59E0B;
+}
+
+.tooth-danger {
+    background: #FEE2E2;
+    border-color: #EF4444;
+}
+
+.tooth-number {
+    position: absolute;
+    top: 2px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.tooth-ppd {
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.teeth-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+}
+
+.legend-color.normal {
+    background: #D1FAE5;
+    border-color: #10B981;
+}
+
+.legend-color.warning {
+    background: #FEF3C7;
+    border-color: #F59E0B;
+}
+
+.legend-color.danger {
+    background: #FEE2E2;
+    border-color: #EF4444;
+}
+
+/* Действия обследования */
+.examination-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+/* Обновленные стили для карточки пациента */
+.address-truncated {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.patient-actions-full {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+/* Стили для уведомлений */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+}
+
+.notification-success {
+    background: #10B981;
+}
+
+.notification-error {
+    background: #EF4444;
+}
+
+.notification-warning {
+    background: #F59E0B;
+}
+
+.notification-info {
+    background: #3B82F6;
+}
+
+/* Дополнительные медиа-запросы для адаптивности */
+@media (max-width: 1024px) {
+    .modal.extra-large-modal {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .teeth-diagram {
+        overflow-x: auto;
+    }
+    
+    .jaw {
+        min-width: max-content;
+    }
+}
+
+@media (max-width: 768px) {
+    .exam-params-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .diagnosis-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .examination-actions {
+        flex-direction: column;
+    }
+    
+    .patient-actions-full {
+        flex-direction: column;
+    }
+    
+    .teeth-legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Стили для поиска по страховке */
+.patient-insurance {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+/* Улучшенные стили для карточек с новыми полями */
+.info-row .detail-label {
+    color: var(--text-secondary);
+}
+
+.info-row .detail-value {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Анимации для плавных переходов */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-overlay.active .modal {
+    animation: fadeIn 0.3s ease;
 }
