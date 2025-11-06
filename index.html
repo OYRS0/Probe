@@ -9,6 +9,19 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Мобильная шапка с бургер-меню -->
+        <div class="mobile-header">
+            <button class="burger-menu" id="burgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="mobile-logo">PerioPlatforma</div>
+            <div class="user-profile-mobile">
+                <span>Др. Иванов А.В.</span>
+            </div>
+        </div>
+
         <!-- Шапка -->
         <header class="header">
             <div class="logo">PerioPlatforma</div>
@@ -38,7 +51,7 @@
                         <h3>Основное</h3>
                         <ul class="nav-list">
                             <li class="nav-item active">
-                                <a href="#">
+                                <a href="#" class="nav-link" data-page="dashboard">
                                     <span class="nav-icon">🏠</span>
                                     <span class="nav-text">Главная</span>
                                 </a>
@@ -50,7 +63,7 @@
                         <h3>Пациенты</h3>
                         <ul class="nav-list">
                             <li class="nav-item">
-                                <a href="#">
+                                <a href="#" class="nav-link" data-page="patients">
                                     <span class="nav-icon">👥</span>
                                     <span class="nav-text">Все пациенты</span>
                                 </a>
@@ -62,7 +75,7 @@
                         <h3>Осмотры</h3>
                         <ul class="nav-list">
                             <li class="nav-item">
-                                <a href="#">
+                                <a href="#" class="nav-link" data-page="examinations">
                                     <span class="nav-icon">📊</span>
                                     <span class="nav-text">История осмотров</span>
                                 </a>
@@ -74,7 +87,7 @@
                         <h3>Отчеты</h3>
                         <ul class="nav-list">
                             <li class="nav-item">
-                                <a href="#">
+                                <a href="#" class="nav-link" data-page="reports">
                                     <span class="nav-icon">📈</span>
                                     <span class="nav-text">Статистика</span>
                                 </a>
@@ -86,7 +99,7 @@
                         <h3>Настройки</h3>
                         <ul class="nav-list">
                             <li class="nav-item">
-                                <a href="#">
+                                <a href="#" class="nav-link" data-page="settings">
                                     <span class="nav-icon">⚙️</span>
                                     <span class="nav-text">Профиль практики</span>
                                 </a>
@@ -101,57 +114,130 @@
             </nav>
         </aside>
 
+        <!-- Overlay для мобильного меню -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Основная область -->
         <main class="main-content">
-            <!-- Заголовок страницы -->
-            <div class="content-header">
-                <div class="header-left">
-                    <h1>Главная панель</h1>
-                    <p>Добро пожаловать в PerioPlatforma</p>
+            <!-- Страница главной панели -->
+            <div class="page active" id="dashboard-page">
+                <!-- Заголовок страницы -->
+                <div class="content-header">
+                    <div class="header-left">
+                        <h1>Главная панель</h1>
+                        <p>Добро пожаловать в PerioPlatforma</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addPatientBtn">
+                            <span>👤</span>
+                            Добавить пациента
+                        </button>
+                    </div>
                 </div>
-                <div class="header-actions">
-                    <button class="btn btn-primary" id="addPatientBtn">
-                        <span>👤</span>
-                        Добавить пациента
-                    </button>
+
+                <!-- Быстрый доступ -->
+                <section class="quick-actions">
+                    <h2>Быстрый доступ</h2>
+                    <div class="actions-grid">
+                        <div class="action-card" id="quickAddPatient">
+                            <div class="action-icon">👤</div>
+                            <h4>Новый пациент</h4>
+                            <p>Добавление нового пациента в систему</p>
+                        </div>
+                        <div class="action-card" id="quickNewExam">
+                            <div class="action-icon">📊</div>
+                            <h4>Новый осмотр</h4>
+                            <p>Начать новый пародонтальный осмотр</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Активные пациенты -->
+                <section class="active-patients">
+                    <div class="section-header">
+                        <h2>Пациенты, требующие внимания</h2>
+                        <a href="#" class="view-all nav-link" data-page="patients">Все пациенты →</a>
+                    </div>
+                    <div class="patients-grid" id="activePatientsGrid">
+                        <!-- Карточки пациентов будут добавляться через JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Последние осмотры -->
+                <section class="recent-examinations">
+                    <div class="section-header">
+                        <h2>Последние завершенные осмотры</h2>
+                        <a href="#" class="view-all nav-link" data-page="examinations">Вся история →</a>
+                    </div>
+                    <div class="examinations-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Пациент</th>
+                                    <th>Дата осмотра</th>
+                                    <th>PPD средний</th>
+                                    <th>BOP</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="examinationsTable">
+                                <!-- Данные таблицы будут добавляться через JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Статистика -->
+                <section class="statistics">
+                    <h2>Статистика деятельности</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <h3>Всего пациентов</h3>
+                            <div class="stat-number" id="totalPatients">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <h3>Осмотров за месяц</h3>
+                            <div class="stat-number" id="monthlyExams">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <h3>Завершено вовремя</h3>
+                            <div class="stat-number" id="completionRate">0%</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Страница всех пациентов -->
+            <div class="page" id="patients-page">
+                <div class="content-header">
+                    <div class="header-left">
+                        <h1>Все пациенты</h1>
+                        <p>Управление базой пациентов</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addPatientBtn2">
+                            <span>👤</span>
+                            Добавить пациента
+                        </button>
+                    </div>
+                </div>
+                <div class="patients-list" id="allPatientsList">
+                    <!-- Список всех пациентов -->
                 </div>
             </div>
 
-            <!-- Быстрый доступ -->
-            <section class="quick-actions">
-                <h2>Быстрый доступ</h2>
-                <div class="actions-grid">
-                    <div class="action-card" id="quickAddPatient">
-                        <div class="action-icon">👤</div>
-                        <h4>Новый пациент</h4>
-                        <p>Добавление нового пациента в систему</p>
-                    </div>
-                    <div class="action-card" id="quickNewExam">
-                        <div class="action-icon">📊</div>
-                        <h4>Новый осмотр</h4>
-                        <p>Начать новый пародонтальный осмотр</p>
+            <!-- Страница истории осмотров -->
+            <div class="page" id="examinations-page">
+                <div class="content-header">
+                    <div class="header-left">
+                        <h1>История осмотров</h1>
+                        <p>Архив всех проведенных осмотров</p>
                     </div>
                 </div>
-            </section>
-
-            <!-- Активные пациенты -->
-            <section class="active-patients">
-                <div class="section-header">
-                    <h2>Пациенты, требующие внимания</h2>
-                    <a href="#" class="view-all">Все пациенты →</a>
-                </div>
-                <div class="patients-grid" id="activePatientsGrid">
-                    <!-- Карточки пациентов будут добавляться через JavaScript -->
-                </div>
-            </section>
-
-            <!-- Последние осмотры -->
-            <section class="recent-examinations">
-                <div class="section-header">
-                    <h2>Последние завершенные осмотры</h2>
-                    <a href="#" class="view-all">Вся история →</a>
-                </div>
-                <div class="examinations-table">
+                <div class="examinations-full-table">
                     <table>
                         <thead>
                             <tr>
@@ -159,37 +245,18 @@
                                 <th>Дата осмотра</th>
                                 <th>PPD средний</th>
                                 <th>BOP</th>
+                                <th>Статус</th>
                                 <th>Действия</th>
                             </tr>
                         </thead>
-                        <tbody id="examinationsTable">
-                            <!-- Данные таблицы будут добавляться через JavaScript -->
+                        <tbody id="fullExaminationsTable">
+                            <!-- Полная таблица осмотров -->
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <!-- Статистика -->
-            <section class="statistics">
-                <h2>Статистика деятельности</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">👥</div>
-                        <h3>Всего пациентов</h3>
-                        <div class="stat-number" id="totalPatients">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📊</div>
-                        <h3>Осмотров за месяц</h3>
-                        <div class="stat-number" id="monthlyExams">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📈</div>
-                        <h3>Завершено вовремя</h3>
-                        <div class="stat-number" id="completionRate">0%</div>
-                    </div>
-                </div>
-            </section>
+            <!-- Другие страницы будут добавляться по аналогии -->
         </main>
     </div>
 
@@ -235,10 +302,10 @@
                             </div>
                             <div class="form-group phone-number">
                                 <input type="tel" id="phone" name="phone" required 
-                                       pattern="[0-9]{10}" 
-                                       placeholder="9991234567">
-                                <div class="error-message" id="phoneError">Введите корректный номер телефона (10 цифр)</div>
-                                <div class="validation-hint">Только цифры, без пробелов и скобок</div>
+                                       placeholder="999 123-45-67"
+                                       pattern="[\d\s\-()+]{10,}">
+                                <div class="error-message" id="phoneError">Введите корректный номер телефона</div>
+                                <div class="validation-hint">Формат: 999 123-45-67</div>
                             </div>
                         </div>
                     </div>
@@ -278,6 +345,39 @@
                         <button type="submit" class="btn btn-primary btn-large">Добавить пациента</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора пациента для осмотра -->
+    <div class="modal-overlay" id="examModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Выберите пациента для осмотра</h2>
+                <button class="close-btn" id="closeExamModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-container-in-modal">
+                    <input type="text" class="search-input" placeholder="Поиск пациента..." id="examPatientSearch">
+                </div>
+                <div class="patients-list-modal" id="patientsListModal">
+                    <!-- Список пациентов для выбора -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно карточки пациента -->
+    <div class="modal-overlay" id="patientCardModal">
+        <div class="modal large-modal">
+            <div class="modal-header">
+                <h2>Карточка пациента</h2>
+                <button class="close-btn" id="closePatientCardModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="patient-card-content" id="patientCardContent">
+                    <!-- Содержимое карточки пациента -->
+                </div>
             </div>
         </div>
     </div>
