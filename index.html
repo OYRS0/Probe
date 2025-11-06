@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PerioPlatforma - Система пародонтальной диагностики</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="logo">PerioPlatforma</div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Поиск пациента по ФИО или телефону" id="searchInput">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <div class="user-profile">
+                <span class="user-name">Др. Иванов А.В.</span>
+                <button class="logout-btn">Выход</button>
+            </div>
+        </header>
+
+        <!-- Боковая панель -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="user-info">
+                    <div class="user-avatar">ИА</div>
+                    <div class="user-details">
+                        <strong>Др. Иванов А.В.</strong>
+                        <span>Пародонтолог</span>
+                    </div>
+                </div>
+
+                <div class="nav-menu">
+                    <div class="menu-section">
+                        <h3>Основное</h3>
+                        <ul class="nav-list">
+                            <li class="nav-item active">
+                                <a href="#">
+                                    <span class="nav-icon">🏠</span>
+                                    <span class="nav-text">Главная</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>Пациенты</h3>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#">
+                                    <span class="nav-icon">👥</span>
+                                    <span class="nav-text">Все пациенты</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>Осмотры</h3>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#">
+                                    <span class="nav-icon">📊</span>
+                                    <span class="nav-text">История осмотров</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>Отчеты</h3>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#">
+                                    <span class="nav-icon">📈</span>
+                                    <span class="nav-text">Статистика</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>Настройки</h3>
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#">
+                                    <span class="nav-icon">⚙️</span>
+                                    <span class="nav-text">Профиль практики</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sidebar-footer">
+                    <button class="btn-logout">Выйти из системы</button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Основная область -->
+        <main class="main-content">
+            <!-- Заголовок страницы -->
+            <div class="content-header">
+                <div class="header-left">
+                    <h1>Главная панель</h1>
+                    <p>Добро пожаловать в PerioPlatforma</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="addPatientBtn">
+                        <span>👤</span>
+                        Добавить пациента
+                    </button>
+                </div>
+            </div>
+
+            <!-- Быстрый доступ -->
+            <section class="quick-actions">
+                <h2>Быстрый доступ</h2>
+                <div class="actions-grid">
+                    <div class="action-card" id="quickAddPatient">
+                        <div class="action-icon">👤</div>
+                        <h4>Новый пациент</h4>
+                        <p>Добавление нового пациента в систему</p>
+                    </div>
+                    <div class="action-card" id="quickNewExam">
+                        <div class="action-icon">📊</div>
+                        <h4>Новый осмотр</h4>
+                        <p>Начать новый пародонтальный осмотр</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Активные пациенты -->
+            <section class="active-patients">
+                <div class="section-header">
+                    <h2>Пациенты, требующие внимания</h2>
+                    <a href="#" class="view-all">Все пациенты →</a>
+                </div>
+                <div class="patients-grid" id="activePatientsGrid">
+                    <!-- Карточки пациентов будут добавляться через JavaScript -->
+                </div>
+            </section>
+
+            <!-- Последние осмотры -->
+            <section class="recent-examinations">
+                <div class="section-header">
+                    <h2>Последние завершенные осмотры</h2>
+                    <a href="#" class="view-all">Вся история →</a>
+                </div>
+                <div class="examinations-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Пациент</th>
+                                <th>Дата осмотра</th>
+                                <th>PPD средний</th>
+                                <th>BOP</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examinationsTable">
+                            <!-- Данные таблицы будут добавляться через JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Статистика -->
+            <section class="statistics">
+                <h2>Статистика деятельности</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <h3>Всего пациентов</h3>
+                        <div class="stat-number" id="totalPatients">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <h3>Осмотров за месяц</h3>
+                        <div class="stat-number" id="monthlyExams">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <h3>Завершено вовремя</h3>
+                        <div class="stat-number" id="completionRate">0%</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Модальное окно добавления пациента -->
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Добавить пациента</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="patient-form" id="patientForm">
+                    <div class="form-row">
+                        <div class="form-group required">
+                            <label for="lastName">Фамилия</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                            <div class="error-message" id="lastNameError">Поле обязательно для заполнения</div>
+                        </div>
+                        <div class="form-group required">
+                            <label for="firstName">Имя</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                            <div class="error-message" id="firstNameError">Поле обязательно для заполнения</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="middleName">Отчество</label>
+                        <input type="text" id="middleName" name="middleName">
+                    </div>
+
+                    <div class="form-group required full-width">
+                        <label for="phone">Телефон</label>
+                        <div class="phone-input-group">
+                            <div class="form-group country-code">
+                                <div class="country-select">
+                                    <select id="countryCode" name="countryCode">
+                                        <option value="+7">Россия (+7)</option>
+                                        <option value="+375">Беларусь (+375)</option>
+                                        <option value="+380">Украина (+380)</option>
+                                        <option value="+77">Казахстан (+77)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group phone-number">
+                                <input type="tel" id="phone" name="phone" required 
+                                       pattern="[0-9]{10}" 
+                                       placeholder="9991234567">
+                                <div class="error-message" id="phoneError">Введите корректный номер телефона (10 цифр)</div>
+                                <div class="validation-hint">Только цифры, без пробелов и скобок</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group required">
+                            <label for="birthDate">Дата рождения</label>
+                            <input type="date" id="birthDate" name="birthDate" required 
+                                   max="2023-12-31" min="1900-01-01">
+                            <div class="error-message" id="birthDateError">Укажите дату рождения</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Пол</label>
+                            <select id="gender" name="gender">
+                                <option value="">Не указан</option>
+                                <option value="male">Мужской</option>
+                                <option value="female">Женский</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                        <div class="error-message" id="emailError">Введите корректный email</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Примечания</label>
+                        <textarea id="notes" name="notes" rows="3" 
+                                  placeholder="Дополнительная информация о пациенте..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary btn-large" id="cancelBtn">Отмена</button>
+                        <button type="submit" class="btn btn-primary btn-large">Добавить пациента</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
